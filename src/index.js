@@ -78,15 +78,15 @@ module.exports = function ({ types }) {
           path.node.body
             .filter(it => {
               const { type, declaration } = it;
-              
+
               switch (type) {
                 case "ClassDeclaration":
                   return true;
-                
+
                 case "ExportNamedDeclaration":
                 case "ExportDefaultDeclaration":
                   return declaration && declaration.type === "ClassDeclaration";
-                
+
                 default:
                   return false;
               }
@@ -119,21 +119,21 @@ module.exports = function ({ types }) {
               for (const specifier of stmt.node.specifiers) {
                 const binding = stmt.scope.getBinding(specifier.local.name);
 
-                if (!binding.referencePaths.length) {
+                if (!binding?.referencePaths.length) {
                   if (decorators[specifier.local.name]) {
-                    binding.referencePaths.push({
+                    binding?.referencePaths.push({
                       parent: decorators[specifier.local.name]
                     });
                   }
                 } else {
-                  const allTypeRefs = binding.referencePaths.reduce((prev, next) => prev || isInType(next), false);
+                  const allTypeRefs = binding?.referencePaths.reduce((prev, next) => prev || isInType(next), false);
                   if (allTypeRefs) {
                     Object.keys(decorators).forEach(k => {
                       const decorator = decorators[k];
 
                       (decorator.expression.arguments || []).forEach(arg => {
                         if (arg.name === specifier.local.name) {
-                          binding.referencePaths.push({
+                          binding?.referencePaths.push({
                             parent: decorator.expression
                           });
                         }
